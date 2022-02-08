@@ -6,19 +6,11 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 12:17:36 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 16:14:23 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/08 17:28:19 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	mutex_stop(t_info *info)
-{
-	pthread_mutex_lock(&info->m_stop);
-	if (info->nb_time_all_philo_eat == info->nb_philo)
-		info->stop = 1;
-	pthread_mutex_unlock(&info->m_stop);
-}
 
 void	mutex_eat(t_philo *philo)
 {
@@ -28,7 +20,10 @@ void	mutex_eat(t_philo *philo)
 	pthread_mutex_lock(&info->eat);
 	if ((int)philo->eated == info->nb_t_philo_m_eat)
 		info->nb_time_all_philo_eat++;
-	mutex_stop(info);
+	pthread_mutex_lock(&info->m_stop);
+	if (info->nb_time_all_philo_eat == info->nb_philo)
+		info->stop = 1;
+	pthread_mutex_unlock(&info->m_stop);
 	pthread_mutex_unlock(&info->eat);
 }
 
@@ -95,7 +90,7 @@ void	print(t_philo *philo, const char *str)
 	{
 		if (info->start_time == 0)
 			info->start_time = get_time();
-		printf(" %-4ld ms philo [%ld] %s\n", get_time() - info->start_time, i, str);
+		printf(FORMAT, get_time() - info->start_time, i, str);
 	}
 	pthread_mutex_unlock(&info->m_stop);
 	pthread_mutex_unlock(&info->print);

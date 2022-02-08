@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 15:59:50 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/08 17:24:55 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define SLEEP "\033[0;34m is sleeping \033[0m"
 # define THINK "\033[0;35m is thinking \033[0m"
 # define DEAD "\033[0;31m is dead\033[0m"
+# define FORMAT " %-4ld ms philo [%ld] %s\n"
 
 typedef struct s_philo	t_philo;
 

@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:52:49 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 16:00:12 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/08 17:25:06 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	check_dead(t_info *info)
 		if ((info->philo[i].last_eat
 				&& get_time() - info->philo[i].last_eat > info->time_to_die))
 		{
-			printf(" %-4ld ms philo [%ld] %s\n", get_time() - info->start_time, i + 1, DEAD);
+			printf(FORMAT, get_time() - info->start_time, i + 1, DEAD);
 			info->stop = 1;
 			pthread_mutex_unlock(&info->m_stop);
 			pthread_mutex_unlock(&info->philo[i].mutex);
@@ -67,7 +67,28 @@ void	check_dead(t_info *info)
 	pthread_mutex_unlock(&info->m_stop);
 }
 
-int	create_thread(pthread_t *id_tab, t_info *info)
+int	create_even_thread(pthread_t *id_tab, t_info *info)
+{
+	size_t	i;
+	int		ret;
+
+	i = 0;
+	ret = 0;
+	while (i < info->nb_philo)
+	{
+		if (i % 2)
+		{	
+			info->philo[i].idx = i + 1;
+			ret = pthread_create(&id_tab[i], NULL, fn_philo, &info->philo[i]);
+			if (ret)
+				return (ret);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	create_odd_thread(pthread_t *id_tab, t_info *info)
 {
 	size_t	i;
 	int		ret;
@@ -77,18 +98,6 @@ int	create_thread(pthread_t *id_tab, t_info *info)
 	while (i < info->nb_philo)
 	{
 		if (!(i % 2))
-		{	
-			info->philo[i].idx = i + 1;
-			ret = pthread_create(&id_tab[i], NULL, fn_philo, &info->philo[i]);
-			if (ret)
-				return (ret);
-		}
-		i++;
-	}
-	i = 0;
-	while (i < info->nb_philo)
-	{
-		if (i % 2)
 		{	
 			info->philo[i].idx = i + 1;
 			ret = pthread_create(&id_tab[i], NULL, fn_philo, &info->philo[i]);
@@ -114,7 +123,10 @@ int	launch_thread(t_info *info)
 	id_tab = malloc(sizeof(pthread_t) * info->nb_philo);
 	if (!id_tab)
 		return (0);
-	ret = create_thread(id_tab, info);
+	ret = create_odd_thread(id_tab, info);
+	if (ret)
+		return (0);
+	ret = create_even_thread(id_tab, info);
 	if (ret)
 		return (0);
 	check_dead(info);

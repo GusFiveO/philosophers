@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:13:02 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 15:57:08 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/08 17:42:22 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,20 @@ int	parse_args(t_info *info, int argc, char **argv)
 		info->nb_t_philo_m_eat = ft_atoi(argv[5]);
 	else
 		info->nb_t_philo_m_eat = -1;
+	if (info->nb_t_philo_m_eat == 0 || info->nb_philo == 0)
+	{
+		free(info);
+		return (0);
+	}
 	info->forks = malloc(sizeof(pthread_mutex_t) * info->nb_philo);
 	if (!info->forks)
 		return (0);
 	info->philo = malloc(sizeof(t_philo) * info->nb_philo);
 	if (!info->philo)
+	{
+		free(info->forks);
 		return (0);
+	}
 	return (1);
 }
 
@@ -89,7 +97,8 @@ int	main(int argc, char **argv)
 	{
 		if (check_args(argc, argv))
 		{	
-			fill_struct(info, argc, argv);
+			if (!fill_struct(info, argc, argv))
+				return (-1);
 			launch_thread(info);
 			free(info->forks);
 			free(info->philo);
