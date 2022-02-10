@@ -2,14 +2,14 @@ SRC_DIR = src/
 INC_DIR = include/
 OBJ_DIR = bin/
 
-SRCS = main.c utils.c process.c
+SRCS = main.c utils.c process.c routine.c
 OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
 NAME = philo
 
 CC = gcc
-CFLAGS = -Werror -Wextra -Wall -g #-fsanitize=thread
-LINKS = -lpthread #-fsanitize=thread
+CFLAGS = -Werror -Wextra -Wall -g -fsanitize=address#-fsanitize=thread
+LINKS = -lpthread -fsanitize=address#-fsanitize=thread
 INCPATH = -I$(INC_DIR)
 
 all: $(NAME)

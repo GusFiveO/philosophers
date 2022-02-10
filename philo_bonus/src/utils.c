@@ -6,11 +6,21 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:21:30 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 15:59:23 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/10 14:11:50 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
 size_t	get_time(void)
 {
@@ -49,4 +59,24 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (ret * signe);
+}
+
+char	*create_name(const char *prefix, size_t idx)
+{
+	size_t	len;
+	size_t	i;
+	char	*ret;
+
+	len = ft_strlen(prefix);
+	ret = malloc(sizeof(char) * len + 3);
+	i = 0;
+	ret[i] = '/';
+	while (prefix[i])
+	{
+		ret[i + 1] = prefix[i];
+		i++;
+	}
+	ret[i + 1] = idx + '0';
+	ret[i + 2] = '\0';
+	return (ret);
 }

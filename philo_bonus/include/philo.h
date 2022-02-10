@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/09 18:58:44 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/10 14:38:15 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,29 @@
 # define DEAD "\033[0;31m is dead\033[0m"
 # define FORMAT " %-4ld ms philo [%ld] %s\n"
 
-typedef struct s_semaphores
-{
-	sem_t	*fork;
-}	t_semaphores;
+typedef int				t_group;
+
 typedef struct s_philo	t_philo;
+
+enum e_group
+{
+	odd = 0,
+	even,
+	master
+};
 
 typedef struct s_info
 {
+	int				group;
 	t_philo			*philo;
-	size_t			stop;
 	size_t			nb_philo;
 	size_t			time_to_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
 	int				nb_t_philo_m_eat;
 	size_t			start_time;
-	size_t			nb_time_all_philo_eat;
+	sem_t			*stop;
+	sem_t			*eat;
 }	t_info;
 
 typedef struct s_philo
@@ -57,15 +63,15 @@ typedef struct s_philo
 	size_t			last_eat;
 	size_t			dead;
 	sem_t			*fork;
-	//t_semaphores	*fork;
 }	t_philo;
-
 
 /*-----utils.c-----*/
 
 int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
 size_t	get_time(void);
+size_t	ft_strlen(const char *str);
+char	*create_name(const char *prefix, size_t idx);
 
 /*-----thread.c-----*/
 
@@ -74,5 +80,9 @@ int		launch_process(t_info *info);
 /*-----semaphores.c-----*/
 
 int		init_semaphores(t_info *info);
+
+/*-----routine.c-----*/
+
+void	routine(t_philo *philo);
 
 #endif
