@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/10 14:38:15 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/10 18:13:01 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 # include <semaphore.h>
 
 # define FORK "\033[0;33m has taken a fork\033[0m"
-# define EAT "\033[0;32m is eating \033[0m"
-# define SLEEP "\033[0;34m is sleeping \033[0m"
-# define THINK "\033[0;35m is thinking \033[0m"
+# define EAT "\033[0;32m is eating\033[0m"
+# define SLEEP "\033[0;34m is sleeping\033[0m"
+# define THINK "\033[0;35m is thinking\033[0m"
 # define DEAD "\033[0;31m is dead\033[0m"
 # define FORMAT " %-4ld ms philo [%ld] %s\n"
 
@@ -43,7 +43,9 @@ enum e_group
 
 typedef struct s_info
 {
+	int				*pid_tab;
 	int				group;
+	int				finish;
 	t_philo			*philo;
 	size_t			nb_philo;
 	size_t			time_to_die;
@@ -62,14 +64,19 @@ typedef struct s_philo
 	size_t			idx;
 	size_t			last_eat;
 	size_t			dead;
+	sem_t			*p_eat;
 	sem_t			*fork;
 }	t_philo;
+
+/*-----main.c-----*/
+
+int		ft_isdigit(int c);
 
 /*-----utils.c-----*/
 
 int		ft_atoi(const char *str);
-int		ft_isdigit(int c);
 size_t	get_time(void);
+int		create_semaphore(sem_t **sem, const char *prefix, size_t val, size_t i);
 size_t	ft_strlen(const char *str);
 char	*create_name(const char *prefix, size_t idx);
 
@@ -80,9 +87,14 @@ int		launch_process(t_info *info);
 /*-----semaphores.c-----*/
 
 int		init_semaphores(t_info *info);
+int		create_philo_sem(t_info *info, size_t i);
 
 /*-----routine.c-----*/
 
 void	routine(t_philo *philo);
+
+/*-----death_checker.c-----*/
+
+int	launch_thread(t_info *info);
 
 #endif

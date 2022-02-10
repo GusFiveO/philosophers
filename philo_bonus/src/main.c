@@ -6,11 +6,18 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:13:02 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/10 14:38:40 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/10 18:17:59 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
 
 int	check_args(int argc, char **argv)
 {
@@ -61,6 +68,7 @@ int	fill_struct(t_info *info, int argc, char **argv)
 	if (!parse_args(info, argc, argv))
 		return (0);
 	info->group = master;
+	info->finish = 0;
 	info->stop = 0;
 	info->start_time = 0;
 	info->philo = malloc(sizeof(t_philo) * info->nb_philo);
@@ -82,7 +90,9 @@ int	main(int argc, char **argv)
 	t_info	*info;
 
 	info = malloc(sizeof(t_info) * 1);
-	if (argc >= 5 && argc <= 6 && info)
+	if (!info)
+		return (-1);
+	if (argc >= 5 && argc <= 6)
 	{
 		if (check_args(argc, argv))
 		{	
@@ -93,6 +103,7 @@ int	main(int argc, char **argv)
 			free(info);
 			return (1);
 		}
+		free(info);
 		return (-1);
 	}
 	printf("Error");

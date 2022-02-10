@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:07:47 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/10 15:03:55 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/10 17:08:02 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	eat(t_philo *philo, const char *str)
 	else
 		neighbor = &info->philo[philo->idx];
 	printf(FORMAT, get_time() - info->start_time, philo->idx, str);
+	sem_post(philo->p_eat);	
 	sem_post(info->eat);
 	usleep(info->time_to_eat);
 	sem_post(neighbor->fork);
@@ -64,6 +65,7 @@ void	think(t_philo *philo, const char *str)
 
 void	routine(t_philo *philo)
 {
+	sem_post(philo->p_eat);	
 	while (1)
 	{
 		take_forks(philo, FORK);

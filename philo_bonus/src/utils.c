@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:21:30 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/10 14:11:50 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/10 16:15:57 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,6 @@ size_t	get_time(void)
 
 	gettimeofday(&time, NULL);
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
 }
 
 int	ft_atoi(const char *str)
@@ -79,4 +72,21 @@ char	*create_name(const char *prefix, size_t idx)
 	ret[i + 1] = idx + '0';
 	ret[i + 2] = '\0';
 	return (ret);
+}
+
+int	create_semaphore(sem_t **sem, const char *prefix, size_t value, size_t idx)
+{
+	char	*name;
+
+	name = create_name(prefix, idx);
+	if (!name)
+		return (0);
+	*sem = sem_open(name, O_CREAT | O_EXCL, 0644, value);
+	if (sem_unlink(name) == -1)
+	{
+		free(name);
+		return (0);
+	}
+	free(name);
+	return (1);
 }
