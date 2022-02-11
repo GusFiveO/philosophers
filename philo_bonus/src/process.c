@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:52:49 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/10 18:14:25 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/11 17:05:18 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,11 @@ int	create_even(t_info *info)
 			{
 				info->group = even;
 				info->philo[i].idx = i + 1;
+				info->philo[i].last_eat = get_time();
+				launch_thread(&info->philo[i]);
 				routine(&info->philo[i]);
 				break ;
 			}
-			usleep(100);
 		}
 		i++;
 	}
@@ -52,43 +53,21 @@ int	create_odd(t_info *info)
 			{
 				info->group = odd;
 				info->philo[i].idx = i + 1;
+				info->philo[i].last_eat = get_time();
+				launch_thread(&info->philo[i]);
 				routine(&info->philo[i]);
 				break ;
 			}
-			usleep(100);
 		}
 		i++;
 	}
 	return (1);
 }
 
-int	check_stop(t_info *info)
-{
-	size_t	i;
-	size_t	eated;
-
-	i = 0;
-	eated = 0;
-	while (!info->finish && eated != info->nb_philo * info->nb_t_philo_m_eat)
-	{
-		sem_wait(info->eat);
-		eated++;
-	}
-	while (i < info->nb_philo)
-		kill(info->pid_tab[i++], SIGSTOP);
-	free(info->pid_tab);
-	i = 0;
-	while (i < info->nb_philo)
-	{
-		sem_close(info->philo[i].fork);
-		i++;
-	}
-	return (1);
-}
 
 int	launch_process(t_info *info)
 {
-	size_t			i;
+	size_t	i;
 
 	i = 0;
 	info->pid_tab = malloc(sizeof(int) * info->nb_philo);
@@ -96,12 +75,15 @@ int	launch_process(t_info *info)
 		return (0);
 	info->start_time = get_time();
 	create_odd(info);
+	usleep(200);
 	create_even(info);
-	launch_thread(info);
-	if (check_stop(info))
+	if (!launch_eat_thread(info))
 		return (1);
-	while (i++ < info->nb_philo)
-		waitpid(-1, NULL, 0);
+	sem_wait(info->dead);
+//	while (i++ < info->nb_philo)
+//		waitpid(-1, NULL, 0);
+	while (i < info->nb_philo)
+		kill(info->pid_tab[i++], SIGSTOP);
 	free(info->pid_tab);
 	i = 0;
 	while (i < info->nb_philo)

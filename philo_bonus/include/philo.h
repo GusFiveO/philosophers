@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/10 18:13:01 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/11 16:37:46 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,10 @@ typedef struct s_info
 	size_t			time_to_sleep;
 	int				nb_t_philo_m_eat;
 	size_t			start_time;
-	sem_t			*stop;
+	int				first_loop;
+	sem_t			*dead;
 	sem_t			*eat;
+	pthread_t		eat_check;
 }	t_info;
 
 typedef struct s_philo
@@ -66,6 +68,8 @@ typedef struct s_philo
 	size_t			dead;
 	sem_t			*p_eat;
 	sem_t			*fork;
+	sem_t			*set_time;
+	pthread_t		id;
 }	t_philo;
 
 /*-----main.c-----*/
@@ -86,6 +90,7 @@ int		launch_process(t_info *info);
 
 /*-----semaphores.c-----*/
 
+void	close_sem(t_info *info);
 int		init_semaphores(t_info *info);
 int		create_philo_sem(t_info *info, size_t i);
 
@@ -93,8 +98,9 @@ int		create_philo_sem(t_info *info, size_t i);
 
 void	routine(t_philo *philo);
 
-/*-----death_checker.c-----*/
+/*-----thread.c-----*/
 
-int	launch_thread(t_info *info);
+int	launch_thread(t_philo *philo);
+int	launch_eat_thread(t_info *info);
 
 #endif
