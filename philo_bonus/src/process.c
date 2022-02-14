@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:52:49 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/11 17:05:18 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/14 16:46:33 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ int	create_even(t_info *info)
 			{
 				info->group = even;
 				info->philo[i].idx = i + 1;
-				info->philo[i].last_eat = get_time();
-				launch_thread(&info->philo[i]);
-				routine(&info->philo[i]);
+				launch_philo(&info->philo[i]);
 				break ;
 			}
 		}
@@ -53,9 +51,7 @@ int	create_odd(t_info *info)
 			{
 				info->group = odd;
 				info->philo[i].idx = i + 1;
-				info->philo[i].last_eat = get_time();
-				launch_thread(&info->philo[i]);
-				routine(&info->philo[i]);
+				launch_philo(&info->philo[i]);
 				break ;
 			}
 		}
@@ -75,20 +71,22 @@ int	launch_process(t_info *info)
 		return (0);
 	info->start_time = get_time();
 	create_odd(info);
-	usleep(200);
+	smart_sleep(info->time_to_eat - 1000);
 	create_even(info);
-	if (!launch_eat_thread(info))
-		return (1);
-	sem_wait(info->dead);
-//	while (i++ < info->nb_philo)
-//		waitpid(-1, NULL, 0);
+	launch_eat_thread(info);
+
+	sem_wait(info->stop);
 	while (i < info->nb_philo)
 		kill(info->pid_tab[i++], SIGSTOP);
 	free(info->pid_tab);
 	i = 0;
+	sem_close(info->print);
+	sem_close(info->eat);
+	sem_close(info->stop);
 	while (i < info->nb_philo)
 	{
 		sem_close(info->philo[i].fork);
+		sem_close(info->philo[i].monitoring);
 		i++;
 	}
 	return (1);

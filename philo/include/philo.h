@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 17:24:55 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/12 17:09:43 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct s_philo
 int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
 size_t	get_time(void);
+void	smart_sleep(size_t time);
 
 /*-----thread.c-----*/
 

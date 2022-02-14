@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 12:17:36 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 17:28:19 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/14 17:24:29 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	print(t_philo *philo, const char *str)
 
 	i = philo->idx;
 	info = philo->info;
-	pthread_mutex_lock(&info->print);
+	//pthread_mutex_lock(&info->print);
 	pthread_mutex_lock(&info->m_stop);
 	if (!info->stop)
 	{
@@ -93,7 +93,7 @@ void	print(t_philo *philo, const char *str)
 		printf(FORMAT, get_time() - info->start_time, i, str);
 	}
 	pthread_mutex_unlock(&info->m_stop);
-	pthread_mutex_unlock(&info->print);
+	//pthread_mutex_unlock(&info->print);
 }
 
 int	init_mutex(t_info *info)

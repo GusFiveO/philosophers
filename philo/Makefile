@@ -8,8 +8,8 @@ OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 NAME = philo
 
 CC = gcc
-CFLAGS = -Werror -Wextra -Wall -g -fsanitize=thread
-LINKS = -lpthread -fsanitize=thread
+CFLAGS = -Werror -Wextra -Wall -g #-fsanitize=thread
+LINKS = -lpthread #-fsanitize=thread
 INCPATH = -I$(INC_DIR)
 
 all: $(NAME)

@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:13:02 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/11 15:06:08 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/14 12:20:07 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ int	fill_struct(t_info *info, int argc, char **argv)
 	while (i < info->nb_philo)
 	{
 		info->philo[i].last_eat = 0;
-		info->philo[i].dead = 0;
 		info->philo[i].eated = 0;
 		info->philo[i].info = info;
 		i++;

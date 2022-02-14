@@ -6,11 +6,20 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:21:30 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 15:59:23 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/12 17:05:12 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	smart_sleep(size_t time)
+{
+	size_t	start_time;
+
+	start_time = get_time();
+	while (get_time() - start_time < time / 1000)
+		usleep(10);
+}
 
 size_t	get_time(void)
 {
