@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:13:02 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/08 17:42:22 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/15 15:23:20 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,31 @@ int	fill_struct(t_info *info, int argc, char **argv)
 		i++;
 	}
 	return (1);
+}
+
+int	init_mutex(t_info *info)
+{
+	if (pthread_mutex_init(&info->m_stop, NULL))
+		return (1);
+	if (pthread_mutex_init(&info->eat, NULL))
+	{
+		pthread_mutex_destroy(&info->m_stop);
+		return (1);
+	}
+	if (pthread_mutex_init(&info->print, NULL))
+	{
+		pthread_mutex_destroy(&info->m_stop);
+		pthread_mutex_destroy(&info->eat);
+		return (1);
+	}
+	if (init_philo_mutex(info))
+	{
+		pthread_mutex_destroy(&info->m_stop);
+		pthread_mutex_destroy(&info->eat);
+		pthread_mutex_destroy(&info->print);
+		return (1);
+	}
+	return (0);
 }
 
 int	main(int argc, char **argv)

@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/12 17:09:43 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/15 15:21:24 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-# define FORK "\033[0;33m has taken a fork\033[0m"
-# define EAT "\033[0;32m is eating \033[0m"
-# define SLEEP "\033[0;34m is sleeping \033[0m"
-# define THINK "\033[0;35m is thinking \033[0m"
-# define DEAD "\033[0;31m is dead\033[0m"
+# define FORK "\033[0;33m has taken a fork\n\033[0m"
+# define EAT "\033[0;32m is eating\n\033[0m"
+# define SLEEP "\033[0;34m is sleeping\n\033[0m"
+# define THINK "\033[0;35m is thinking\n\033[0m"
+# define DEAD "\033[0;31m is dead\n\033[0m"
 # define FORMAT " %-4ld ms philo [%ld] %s\n"
 
 typedef struct s_philo	t_philo;
@@ -58,6 +58,17 @@ typedef struct s_philo
 	pthread_mutex_t	mutex;
 }	t_philo;
 
+/*-----main.c-----*/
+
+int		init_mutex(t_info *info);
+
+/*-----write_utils.c-----*/
+
+void	ft_putchar(char c);
+void	ft_putnbr(size_t n);
+void	ft_putstr(const char *str);
+void	put_action(size_t timestamp, const char *action, size_t idx);
+
 /*-----utils.c-----*/
 
 int		ft_atoi(const char *str);
@@ -75,12 +86,10 @@ void	routine(t_philo *philo);
 
 /*-----mutex.c-----*/
 
-int		init_mutex(t_info *info);
+int		init_philo_mutex(t_info *info);
 void	lock_forks(t_info *info, size_t idx);
 void	mutex_eat(t_philo *philo);
 void	unlock_forks(t_info *info, size_t idx);
 void	print(t_philo *philo, const char *str);
-void	increase_eat(t_philo *philo);
-void	stop(t_info *info);
 
 #endif

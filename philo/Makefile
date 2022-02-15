@@ -2,7 +2,7 @@ SRC_DIR = src/
 INC_DIR = include/
 OBJ_DIR = bin/
 
-SRCS = main.c utils.c thread.c routine.c mutex.c
+SRCS = main.c utils.c write_utils.c thread.c routine.c mutex.c
 OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
 NAME = philo
