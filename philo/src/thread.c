@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:52:49 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/15 15:24:02 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/16 15:01:41 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	check_dead(t_info *info)
 		if ((info->philo[i].last_eat
 				&& get_time() - info->philo[i].last_eat > info->time_to_die))
 		{
-			put_action(get_time() - info->start_time, DEAD, i);
+			put_action(get_time() - info->start_time, DEAD, i + 1);
 			info->stop = 1;
 			pthread_mutex_unlock(&info->m_stop);
 			pthread_mutex_unlock(&info->philo[i].mutex);

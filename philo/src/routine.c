@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/05 15:59:09 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/12 17:05:54 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/16 15:00:11 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	eat(t_philo *philo, const char *str)
 	print(philo, str);
 	philo->eated++;
 	mutex_eat(philo);
-	smart_sleep(info->time_to_eat);
+	usleep(info->time_to_eat);
 }
 
 void	ft_sleep(t_philo *philo, const char *str)
@@ -45,24 +45,14 @@ void	ft_sleep(t_philo *philo, const char *str)
 	i = philo->idx;
 	print(philo, str);
 	unlock_forks(info, i - 1);
-	smart_sleep(info->time_to_sleep);
+	usleep(info->time_to_sleep);
 }
 
-void	think(t_philo *philo, const char *str)
-{
-	t_info	*info;
-
-	info = philo->info;
-	print(philo, str);
-	while (get_time() - philo->last_eat < info->time_to_die * 3 / 4)
-		smart_sleep(100);
-	(void)info;
-}
 
 void	routine(t_philo *philo)
 {
 	take_forks(philo);
 	eat(philo, EAT);
 	ft_sleep(philo, SLEEP);
-	think(philo, THINK);
+	print(philo, THINK);
 }
