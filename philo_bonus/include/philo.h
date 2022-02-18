@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/14 15:20:52 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/18 15:13:24 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,8 @@ typedef struct s_philo	t_philo;
 
 enum e_group
 {
-	odd = 0,
-	even,
-	master
+	master = 1,
+	philo	
 };
 
 typedef struct s_info
@@ -52,9 +51,13 @@ typedef struct s_info
 	size_t			time_to_sleep;
 	int				nb_t_philo_m_eat;
 	size_t			start_time;
+	size_t			finish;
+	size_t			eated;
 	sem_t			*print;
 	sem_t			*stop;
 	sem_t			*eat;
+	sem_t			*forks;
+	sem_t			*check_finish;
 	pthread_t		eat_check;
 }	t_info;
 
@@ -64,9 +67,9 @@ typedef struct s_philo
 	size_t			eated;
 	size_t			idx;
 	size_t			last_eat;
+	size_t			eat;
 	size_t			dead;
 	sem_t			*monitoring;
-	sem_t			*fork;
 	pthread_t		id;
 }	t_philo;
 

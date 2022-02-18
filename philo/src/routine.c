@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/05 15:59:09 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/16 15:00:11 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/18 16:31:33 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	ft_sleep(t_philo *philo, const char *str)
 	unlock_forks(info, i - 1);
 	usleep(info->time_to_sleep);
 }
-
 
 void	routine(t_philo *philo)
 {

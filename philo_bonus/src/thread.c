@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 14:06:41 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/14 16:44:52 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/18 16:26:20 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,23 @@ void	*check_death(void *arg)
 
 void	*eat_check(void *arg)
 {
-	size_t	eated;
 	t_info	*info;
-	
+	size_t	eated;
+
 	info = (t_info *)arg;
 	eated = 0;
-	while (1)
+	while (eated != info->nb_philo * info->nb_t_philo_m_eat)
 	{
+		sem_wait(info->check_finish);
+		if (info->finish)
+			return (NULL);
+		sem_post(info->check_finish);
 		sem_wait(info->eat);
 		eated++;
-		if (eated == info->nb_philo * info->nb_t_philo_m_eat)
-		{
-			sem_post(info->stop);
-			break ;
-		}
 	}
-	return (arg);
+	sem_wait(info->print);
+	sem_post(info->stop);
+	return (NULL);
 }
 
 int	launch_eat_thread(t_info *info)
@@ -61,9 +62,6 @@ int	launch_eat_thread(t_info *info)
 
 	ret = 0;
 	ret = pthread_create(&info->eat_check, NULL, eat_check, info);
-	if (ret)
-		return (0);
-	ret = pthread_detach(info->eat_check);
 	if (ret)
 		return (0);
 	return (1);

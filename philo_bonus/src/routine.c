@@ -6,69 +6,45 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:07:47 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/14 16:32:50 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/18 16:22:08 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	smart_sleep(size_t time)
-{
-	size_t	start_time;
-
-	start_time = get_time();
-	while (get_time() - start_time < time / 1000)
-		usleep(10);
-}
-
 void	take_forks(t_philo *philo, const char *str)
 {
 	t_info	*info;
-	t_philo	*neighbor;
 
 	info = philo->info;
-	if (philo->idx == info->nb_philo)
-		neighbor = &info->philo[0];
-	else
-		neighbor = &info->philo[philo->idx];
-	sem_wait(neighbor->fork);
-	
+	sem_wait(info->forks);
 	sem_wait(info->print);
-	printf(FORMAT, get_time() - info->start_time, philo->idx, str);
+	if (!philo->eated)
+		printf(FORMAT, get_time() - info->start_time, philo->idx, str);
 	sem_post(info->print);
-
-	sem_wait(philo->fork);
-
+	sem_wait(info->forks);
 	sem_wait(info->print);
-	printf(FORMAT, get_time() - info->start_time, philo->idx, str);
+	if (!philo->eated)
+		printf(FORMAT, get_time() - info->start_time, philo->idx, str);
 	sem_post(info->print);
-
 }
 
 void	eat(t_philo *philo, const char *str)
 {
 	t_info	*info;
-	t_philo	*neighbor;
 
 	info = philo->info;
-	if (philo->idx == info->nb_philo)
-		neighbor = &info->philo[0];
-	else
-		neighbor = &info->philo[philo->idx];
-
 	sem_wait(philo->monitoring);
 	philo->last_eat = get_time();
 	sem_post(philo->monitoring);
-
 	sem_wait(info->print);
-	printf(FORMAT, get_time() - info->start_time, philo->idx, str);
+	if (!philo->eated)
+		printf(FORMAT, get_time() - info->start_time, philo->idx, str);
 	sem_post(info->print);
-
 	sem_post(info->eat);
-
-	smart_sleep(info->time_to_eat);
-	sem_post(neighbor->fork);
-	sem_post(philo->fork);
+	usleep(info->time_to_eat);
+	sem_post(info->forks);
+	sem_post(info->forks);
 }
 
 void	ft_sleep(t_philo *philo, const char *str)
@@ -76,12 +52,11 @@ void	ft_sleep(t_philo *philo, const char *str)
 	t_info	*info;
 
 	info = philo->info;
-
 	sem_wait(info->print);
-	printf(FORMAT, get_time() - info->start_time, philo->idx, str);
+	if (!philo->eated)
+		printf(FORMAT, get_time() - info->start_time, philo->idx, str);
 	sem_post(info->print);
-
-	smart_sleep(info->time_to_sleep);
+	usleep(info->time_to_sleep);
 }
 
 void	think(t_philo *philo, const char *str)
@@ -89,15 +64,16 @@ void	think(t_philo *philo, const char *str)
 	t_info	*info;
 
 	info = philo->info;
-
 	sem_wait(info->print);
-	printf(FORMAT, get_time() - info->start_time, philo->idx, str);
+	if (!philo->eated)
+		printf(FORMAT, get_time() - info->start_time, philo->idx, str);
 	sem_post(info->print);
-
 }
 
 void	routine(t_philo *philo)
 {
+	if (philo->idx % 2)
+		usleep(philo->info->time_to_eat);
 	while (1)
 	{
 		take_forks(philo, FORK);
@@ -105,4 +81,5 @@ void	routine(t_philo *philo)
 		ft_sleep(philo, SLEEP);
 		think(philo, THINK);
 	}
+	exit(0);
 }
