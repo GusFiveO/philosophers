@@ -6,13 +6,14 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/18 15:13:24 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/20 19:13:08 by augustinlorai    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <signal.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -52,12 +53,9 @@ typedef struct s_info
 	int				nb_t_philo_m_eat;
 	size_t			start_time;
 	size_t			finish;
-	size_t			eated;
-	sem_t			*print;
 	sem_t			*stop;
 	sem_t			*eat;
 	sem_t			*forks;
-	sem_t			*check_finish;
 	pthread_t		eat_check;
 }	t_info;
 
@@ -67,10 +65,10 @@ typedef struct s_philo
 	size_t			eated;
 	size_t			idx;
 	size_t			last_eat;
-	size_t			eat;
-	size_t			dead;
+	sem_t			*check_finish;
 	sem_t			*monitoring;
-	pthread_t		id;
+	pthread_t		check_dead;
+	pthread_t		check_other_died;
 }	t_philo;
 
 /*-----main.c-----*/

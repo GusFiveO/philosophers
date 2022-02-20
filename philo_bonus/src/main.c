@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:13:02 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/18 15:12:58 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/20 19:34:08 by augustinlorai    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,18 @@ int	fill_struct(t_info *info, int argc, char **argv)
 	i = 0;
 	if (!parse_args(info, argc, argv))
 		return (0);
+	info->pid_tab = malloc(sizeof(pid_t) * info->nb_philo);
+	if (!info->pid_tab)
+		return (0);
 	info->group = master;
 	info->start_time = 0;
 	info->finish = 0;
-	info->eated = 0;
 	info->philo = malloc(sizeof(t_philo) * info->nb_philo);
 	if (!info->philo)
 		return (0);
 	while (i < info->nb_philo)
 	{
 		info->philo[i].last_eat = 0;
-		info->philo[i].eat = 0;
-		info->philo[i].eated = 0;
 		info->philo[i].info = info;
 		i++;
 	}
