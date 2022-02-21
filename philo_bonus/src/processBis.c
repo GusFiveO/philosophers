@@ -6,18 +6,52 @@
 /*   By: augustinlorain <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 16:14:57 by augustinlorai     #+#    #+#             */
-/*   Updated: 2022/02/20 19:31:16 by augustinlorai    ###   ########.fr       */
+/*   Updated: 2022/02/21 15:16:39 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	lauch_thread(t_philo *philo)
+void	*eat_check(void	*arg)
 {
-	if (pthread_create(&philo->check_dead, NULL, check_dead, philo))
-		return (0);
-	if (pthread_create(&philo->check_other_died, NULL, check_other_died, philo))
-		return (0);
+	size_t	eat;
+	t_info	*info;
+
+	eat = 0;
+	info = (t_info *)arg;
+	while (eat != info->nb_philo * info->nb_t_philo_m_eat)
+	{
+		sem_wait(info->eat);
+		eat++;
+		sem_wait(info->check_stop);
+		if (info->finish)
+		{
+			sem_post(info->check_stop);
+			break;
+		}
+		sem_post(info->check_stop);
+	}
+	sem_post(info->stop);
+	return (NULL);
+}
+
+void	end_program(t_info *info)
+{
+	size_t	i;
+
+	i = 0;
+	if (info->group == master)
+		free(info->pid_tab);
+	sem_close(info->eat);
+	sem_close(info->stop);
+	sem_close(info->forks);
+	sem_close(info->check_stop);
+	while (i < info->nb_philo)
+	{
+		sem_close(info->philo[i].check_finish);
+		sem_close(info->philo[i].monitoring);
+		i++;
+	}
 }
 
 int	launch_philo(t_info *info)
@@ -28,72 +62,46 @@ int	launch_philo(t_info *info)
 	info->start_time = get_time();
 	while (i < info->nb_philo)
 	{
+		info->philo[i].idx = i + 1;
 		info->pid_tab[i] = fork();
 		if (info->pid_tab[i] < 0)
 			return (0);
 		if (info->pid_tab[i] == 0)
 		{
-			if (!launch_thread(info->philo[i]))
+			info->group = philo;
+			info->philo[i].last_eat = get_time();
+			if (!launch_thread(&info->philo[i]))
 				return (0);
-			routine(info->philo[i]);
+			routine(&info->philo[i]);
+			free(info->pid_tab);
+			pthread_join(info->philo[i].check_dead, NULL);
+			pthread_join(info->philo[i].check_other_died, NULL);
 			return (1);
 		}
+		usleep(10);
 		i++;
 	}
 	return (1);
 }
 
-void	*eat_check(void	*arg)
-{
-	size_t	eat;
-
-	eat = 0;
-	while (eat != info->nb_philo * info->nb_t_philo_m_eat)
-	{
-		sem_wait(info->eat);
-		eat++;
-		sem_wait(info->stop);
-		if (info->finish)
-		{
-			sem_post(info->stop);
-			break;
-		}
-		sem_post(info->stop);
-	}
-	return (NULL);
-}
-
-void	end_program(t_info *info)
+int	launch_process(t_info *info)
 {
 	size_t	i;
 
-	i = 0;
-	free(info->pid_tab);
-	sem_close(info->eat);
-	sem_close(info->stop);
-	sem_close(info->forks);
-	while (i < info->nb_philo)
-	{
-		sem_close(info->check_finish);
-		sem_close(info->monitoring);
-	}
-}
-
-void	process(t_info *info)
-{
-	size_t	i;
-
-	i = 0;
-	lanch_philo(info);
-	if (info->nb_t_philo_m_eat != -1)
+	i = -1;
+	init_semaphores(info);
+	launch_philo(info);
+	if (info->group == master && info->nb_t_philo_m_eat != -1)
 		if (pthread_create(&info->eat_check, NULL, eat_check, info))
 			return (0);
-	while (i < info->nb_philo)
-		waitpid(info->pid_tab[i++], NULL, 0);
-	sem_wait(info->stop)
+	while (++i < info->nb_philo && info->group == master)
+		waitpid(info->pid_tab[i], NULL, 0);
+	sem_wait(info->check_stop);
+	sem_post(info->eat);
 	info->finish = 1;
-	sem_post(info->stop);
-	if (info->nb_t_philo_m_eat != -1)
+	sem_post(info->check_stop);
+	if (info->group == master && info->nb_t_philo_m_eat != -1)
 		pthread_join(info->eat_check, NULL);
 	end_program(info);
+	return (1);
 }

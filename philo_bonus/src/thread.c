@@ -6,79 +6,60 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 14:06:41 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/18 16:26:20 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/21 15:23:42 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*check_death(void *arg)
+void	*check_dead(void *arg)
 {
 	t_philo	*philo;
-	t_info	*info;
 
 	philo = (t_philo *)arg;
-	info = philo->info;
 	while (1)
 	{
 		sem_wait(philo->monitoring);
-		if (get_time() - philo->last_eat > info->time_to_die)
+		sem_wait(philo->check_finish);
+		if (get_time() - philo->last_eat > philo->info->time_to_die ||
+			philo->info->finish)
 		{
-			sem_wait(info->print);
-			printf(FORMAT, get_time() - info->start_time, philo->idx, DEAD);
-			sem_post(info->stop);
-			break ;
+			sem_post(philo->check_finish);
+			sem_post(philo->monitoring);
+			print(DEAD, philo);
+			sem_wait(philo->check_finish);
+			philo->info->finish = 1;
+			sem_post(philo->check_finish);
+			//sem_post(philo->info->stop);
+			for (size_t i = 0; i <= philo->info->nb_philo; i++)
+				sem_post(philo->info->stop);
+			break;
 		}
+		sem_post(philo->check_finish);
 		sem_post(philo->monitoring);
 		usleep(10);
 	}
-	return (arg);
-}
-
-void	*eat_check(void *arg)
-{
-	t_info	*info;
-	size_t	eated;
-
-	info = (t_info *)arg;
-	eated = 0;
-	while (eated != info->nb_philo * info->nb_t_philo_m_eat)
-	{
-		sem_wait(info->check_finish);
-		if (info->finish)
-			return (NULL);
-		sem_post(info->check_finish);
-		sem_wait(info->eat);
-		eated++;
-	}
-	sem_wait(info->print);
-	sem_post(info->stop);
 	return (NULL);
 }
 
-int	launch_eat_thread(t_info *info)
+void	*check_other_died(void *arg)
 {
-	int	ret;
+	t_philo *philo;
 
-	ret = 0;
-	ret = pthread_create(&info->eat_check, NULL, eat_check, info);
-	if (ret)
-		return (0);
-	return (1);
+	philo = (t_philo *)arg;
+	sem_wait(philo->info->stop);
+	sem_wait(philo->check_finish);
+	philo->info->finish = 1;
+	sem_post(philo->check_finish);
+	//sem_post(philo->info->stop);
+	return (NULL);
 }
 
-int	launch_philo(t_philo *philo)
+int	launch_thread(t_philo *philo)
 {
-	int	ret;
-
-	ret = 0;
-	philo->last_eat = get_time();
-	ret = pthread_create(&philo->id, NULL, check_death, philo);
-	if (ret)
+	if (pthread_create(&philo->check_dead, NULL, check_dead, philo))
 		return (0);
-	ret = pthread_detach(philo->id);
-	if (ret)
+	if (pthread_create(&philo->check_other_died, NULL, check_other_died, philo))
 		return (0);
-	routine(philo);
 	return (1);
 }

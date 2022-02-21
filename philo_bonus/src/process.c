@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:52:49 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/18 16:25:37 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/21 14:17:22 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,11 @@ void	end_program(t_info *info)
 	sem_close(info->eat);
 	sem_close(info->stop);
 	sem_close(info->forks);
-	sem_close(info->check_finish);
+	sem_close(info->check_stop);
 	while (i < info->nb_philo)
 	{
 		sem_close(info->philo[i].monitoring);
+		sem_close(info->philo[i].check_finish);
 		i++;
 	}
 	usleep(info->time_to_die);
@@ -67,6 +68,8 @@ int	launch_process(t_info *info)
 		return (0);
 	info->start_time = get_time();
 	create_philo(info);
+	if (info->group != master)
+		return (0);
 	if (info->nb_t_philo_m_eat != -1)
 		launch_eat_thread(info);
 	sem_wait(info->stop);
