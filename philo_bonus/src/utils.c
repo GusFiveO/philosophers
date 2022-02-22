@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:21:30 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/10 16:15:57 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/22 18:41:13 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,14 @@ int	create_semaphore(sem_t **sem, const char *prefix, size_t value, size_t idx)
 	}
 	free(name);
 	return (1);
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] == s2[i] && s1[i] && s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

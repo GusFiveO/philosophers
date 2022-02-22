@@ -6,7 +6,7 @@
 /*   By: augustinlorain <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 16:14:57 by augustinlorai     #+#    #+#             */
-/*   Updated: 2022/02/21 15:16:39 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/22 19:19:32 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	end_program(t_info *info)
 	sem_close(info->stop);
 	sem_close(info->forks);
 	sem_close(info->check_stop);
+	sem_close(info->print);
 	while (i < info->nb_philo)
 	{
 		sem_close(info->philo[i].check_finish);
@@ -78,7 +79,7 @@ int	launch_philo(t_info *info)
 			pthread_join(info->philo[i].check_other_died, NULL);
 			return (1);
 		}
-		usleep(10);
+		usleep(1000);
 		i++;
 	}
 	return (1);

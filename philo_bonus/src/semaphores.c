@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 16:55:25 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/21 12:03:55 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/22 18:08:09 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	create_philo_sem(t_info *info)
 
 int	init_semaphores2(t_info *info)
 {
+	create_semaphore(&info->print, "print", 1, 0);
 	if (!create_semaphore(&info->eat, "eat", 0, 0))
 	{
 		sem_close(info->stop);

@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/21 12:31:31 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/22 18:41:32 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_info
 	sem_t			*stop;
 	sem_t			*eat;
 	sem_t			*forks;
+	sem_t			*print;
 	pthread_t		eat_check;
 }	t_info;
 
@@ -78,6 +79,7 @@ int		ft_isdigit(int c);
 
 /*-----utils.c-----*/
 
+int		ft_strcmp(const char *s1, const char *s2);
 int		ft_atoi(const char *str);
 size_t	get_time(void);
 int		create_semaphore(sem_t **sem, const char *prefix, size_t val, size_t i);

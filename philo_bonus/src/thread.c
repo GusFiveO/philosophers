@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 14:06:41 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/21 15:23:42 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/22 19:25:35 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,20 @@ void	*check_dead(void *arg)
 			sem_post(philo->check_finish);
 			sem_post(philo->monitoring);
 			print(DEAD, philo);
+			sem_wait(philo->info->print);
 			sem_wait(philo->check_finish);
 			philo->info->finish = 1;
 			sem_post(philo->check_finish);
-			//sem_post(philo->info->stop);
+			sem_post(philo->info->stop);
 			for (size_t i = 0; i <= philo->info->nb_philo; i++)
 				sem_post(philo->info->stop);
+			usleep(1000);
+			sem_post(philo->info->print);
 			break;
 		}
 		sem_post(philo->check_finish);
 		sem_post(philo->monitoring);
-		usleep(10);
+		usleep(15);
 	}
 	return (NULL);
 }
@@ -51,7 +54,7 @@ void	*check_other_died(void *arg)
 	sem_wait(philo->check_finish);
 	philo->info->finish = 1;
 	sem_post(philo->check_finish);
-	//sem_post(philo->info->stop);
+	sem_post(philo->info->stop);
 	return (NULL);
 }
 
