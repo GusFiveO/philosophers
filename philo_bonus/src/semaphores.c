@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 16:55:25 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/23 12:11:27 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/23 14:59:05 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,8 @@ int	init_semaphores2(t_info *info)
 
 int	init_semaphores(t_info *info)
 {
-	if (!create_semaphore(&info->stop, "stop", 1, 0))
+	if (!create_semaphore(&info->stop, "stop", 0, 0))
 		return (0);
-	sem_wait(info->stop);
 	sem_post(info->stop);
 	sem_wait(info->stop);
 	if (!create_semaphore(&info->check_stop, "check_stop", 1, 0))
