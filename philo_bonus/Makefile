@@ -14,7 +14,7 @@ CHECK = ✅
 #@printf "${GREEN}Creating objects${RST}\n"
 
 CC = gcc 
-CFLAGS = -Werror -Wextra -Wall -g #-fsanitize=thread#-fsanitize=address -fsanitize=thread
+CFLAGS= -Werror -Wextra -Wall -g #-fsanitize=thread#-fsanitize=address -fsanitize=thread
 LINKS = -lpthread #-fsanitize=thread#-fsanitize=address -fsanitize=thread
 INCPATH = -I$(INC_DIR)
 
