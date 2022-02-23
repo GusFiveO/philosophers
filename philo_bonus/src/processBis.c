@@ -6,7 +6,7 @@
 /*   By: augustinlorain <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 16:14:57 by augustinlorai     #+#    #+#             */
-/*   Updated: 2022/02/22 19:19:32 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/23 12:00:11 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	*eat_check(void	*arg)
 	while (eat != info->nb_philo * info->nb_t_philo_m_eat)
 	{
 		sem_wait(info->eat);
+	//	sem_wait(info->print);
 		eat++;
 		sem_wait(info->check_stop);
 		if (info->finish)
@@ -30,8 +31,11 @@ void	*eat_check(void	*arg)
 			break;
 		}
 		sem_post(info->check_stop);
+		//sem_post(info->print);
 	}
 	sem_post(info->stop);
+	//usleep(2000);
+	//sem_post(info->print);
 	return (NULL);
 }
 
@@ -79,7 +83,7 @@ int	launch_philo(t_info *info)
 			pthread_join(info->philo[i].check_other_died, NULL);
 			return (1);
 		}
-		usleep(1000);
+		//usleep(1000);
 		i++;
 	}
 	return (1);

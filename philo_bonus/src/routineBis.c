@@ -6,7 +6,7 @@
 /*   By: augustinlorain <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:41:18 by augustinlorai     #+#    #+#             */
-/*   Updated: 2022/02/22 19:27:10 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/23 11:52:01 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,27 @@ void	print(const char *str, t_philo *philo)
 		return ;
 	}
 	sem_post(philo->check_finish);
-	if (!ft_strcmp(EAT, str)
-		&& get_time() - philo->last_eat + 1 >= philo->info->time_to_die)
-		sem_post(philo->info->print);
-	else
-	{
-		printf(FORMAT, get_time() - philo->info->start_time, philo->idx, str);
+	sem_wait(philo->monitoring);
+	size_t	time;
+
+	time = get_time();
+	if (/*!ft_strcmp(EAT, str)
+		&& */time - philo->last_eat + 1 >= philo->info->time_to_die)
+	{	
+		sem_post(philo->info->stop);
+		printf(FORMAT, time - philo->info->start_time, philo->idx, DEAD);
+		sem_wait(philo->check_finish);
+		philo->info->finish = 1;
+		usleep(2000);
+		sem_post(philo->check_finish);
 		sem_post(philo->info->print);
 	}
+	else
+	{
+		printf(FORMAT, time - philo->info->start_time, philo->idx, str);
+		sem_post(philo->info->print);
+	}
+	sem_post(philo->monitoring);
 }
 
 void	increase_eat(t_philo *philo)
