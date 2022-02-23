@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/22 18:41:32 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/23 18:07:05 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ typedef struct s_info
 typedef struct s_philo
 {
 	t_info			*info;
-	size_t			eated;
 	size_t			idx;
 	size_t			last_eat;
 	sem_t			*check_finish;
@@ -82,9 +81,7 @@ int		ft_isdigit(int c);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_atoi(const char *str);
 size_t	get_time(void);
-int		create_semaphore(sem_t **sem, const char *prefix, size_t val, size_t i);
 size_t	ft_strlen(const char *str);
-char	*create_name(const char *prefix, size_t idx);
 
 /*-----process.c-----*/
 
@@ -100,7 +97,6 @@ int		create_philo_sem(t_info *info);
 /*-----routine.c-----*/
 
 void	print(const char *str, t_philo *philo);
-void	smart_sleep(size_t time);
 void	routine(t_philo *philo);
 
 /*-----thread.c-----*/

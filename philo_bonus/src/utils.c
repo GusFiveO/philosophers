@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:21:30 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/22 18:41:13 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/23 18:03:45 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,43 +52,6 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (ret * signe);
-}
-
-char	*create_name(const char *prefix, size_t idx)
-{
-	size_t	len;
-	size_t	i;
-	char	*ret;
-
-	len = ft_strlen(prefix);
-	ret = malloc(sizeof(char) * len + 3);
-	i = 0;
-	ret[i] = '/';
-	while (prefix[i])
-	{
-		ret[i + 1] = prefix[i];
-		i++;
-	}
-	ret[i + 1] = idx + '0';
-	ret[i + 2] = '\0';
-	return (ret);
-}
-
-int	create_semaphore(sem_t **sem, const char *prefix, size_t value, size_t idx)
-{
-	char	*name;
-
-	name = create_name(prefix, idx);
-	if (!name)
-		return (0);
-	*sem = sem_open(name, O_CREAT | O_EXCL, 0644, value);
-	if (sem_unlink(name) == -1)
-	{
-		free(name);
-		return (0);
-	}
-	free(name);
-	return (1);
 }
 
 int	ft_strcmp(const char *s1, const char *s2)
