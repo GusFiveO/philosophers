@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/05 15:59:09 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/18 16:31:33 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 12:28:28 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,7 @@ void	routine(t_philo *philo)
 	eat(philo, EAT);
 	ft_sleep(philo, SLEEP);
 	print(philo, THINK);
+	if (philo->info->nb_philo % 2 && philo->info->time_to_die - (get_time() - philo->last_eat)
+		< (philo->info->time_to_eat + philo->info->time_to_sleep) / 2)
+		usleep((philo->info->time_to_eat + philo->info->time_to_sleep) / 2);
 }

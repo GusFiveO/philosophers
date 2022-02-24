@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   processBis.c                                       :+:      :+:    :+:   */
+/*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: augustinlorain <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 16:14:57 by augustinlorai     #+#    #+#             */
-/*   Updated: 2022/02/23 17:00:18 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 11:20:36 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void	lonely_philo(t_info *info)
 		info->group = philo;
 		printf(FORMAT, (size_t)0, info->philo[0].idx, FORK);
 		printf(FORMAT, info->time_to_die + 1, info->philo[0].idx, DEAD);
+		free(info->pid_tab);
 	}
 	else
 		return ;

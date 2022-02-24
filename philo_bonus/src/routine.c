@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routineBis.c                                       :+:      :+:    :+:   */
+/*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: augustinlorain <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:41:18 by augustinlorai     #+#    #+#             */
-/*   Updated: 2022/02/23 17:00:03 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 11:49:29 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,6 @@ void	routine(t_philo *philo)
 {
 	if (!(philo->idx % 2))
 		usleep(philo->info->time_to_eat);
-	else
-		usleep(1000);
 	sem_wait(philo->check_finish);
 	while (!philo->info->finish)
 	{
@@ -89,6 +87,11 @@ void	routine(t_philo *philo)
 		print(SLEEP, philo);
 		usleep(philo->info->time_to_sleep);
 		print(THINK, philo);
+		sem_wait(philo->monitoring);
+		if (philo->info->time_to_die - (get_time() - philo->last_eat)
+			< (philo->info->time_to_eat + philo->info->time_to_sleep) / 2)
+			usleep((philo->info->time_to_eat + philo->info->time_to_sleep) / 2);
+		sem_post(philo->monitoring);
 		sem_wait(philo->check_finish);
 	}
 	sem_post(philo->check_finish);

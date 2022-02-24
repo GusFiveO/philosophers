@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:52:49 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/16 15:01:41 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 12:19:36 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	*fn_philo(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if (!(philo->idx % 2))
+		usleep(philo->info->time_to_eat);
 	if (philo->info->nb_philo == 1)
 	{
 		philo->info->start_time = get_time();
@@ -67,7 +69,7 @@ void	check_dead(t_info *info)
 	pthread_mutex_unlock(&info->m_stop);
 }
 
-int	create_even_thread(pthread_t *id_tab, t_info *info)
+int	create_thread(pthread_t *id_tab, t_info *info)
 {
 	size_t	i;
 	int		ret;
@@ -76,34 +78,10 @@ int	create_even_thread(pthread_t *id_tab, t_info *info)
 	ret = 0;
 	while (i < info->nb_philo)
 	{
-		if (i % 2)
-		{	
-			info->philo[i].idx = i + 1;
-			ret = pthread_create(&id_tab[i], NULL, fn_philo, &info->philo[i]);
-			if (ret)
-				return (ret);
-		}
-		i++;
-	}
-	return (0);
-}
-
-int	create_odd_thread(pthread_t *id_tab, t_info *info)
-{
-	size_t	i;
-	int		ret;
-
-	i = 0;
-	ret = 0;
-	while (i < info->nb_philo)
-	{
-		if (!(i % 2))
-		{	
-			info->philo[i].idx = i + 1;
-			ret = pthread_create(&id_tab[i], NULL, fn_philo, &info->philo[i]);
-			if (ret)
-				return (ret);
-		}
+		info->philo[i].idx = i + 1;
+		ret = pthread_create(&id_tab[i], NULL, fn_philo, &info->philo[i]);
+		if (ret)
+			return (ret);
 		i++;
 	}
 	return (0);
@@ -123,10 +101,7 @@ int	launch_thread(t_info *info)
 	id_tab = malloc(sizeof(pthread_t) * info->nb_philo);
 	if (!id_tab)
 		return (0);
-	ret = create_odd_thread(id_tab, info);
-	if (ret)
-		return (0);
-	ret = create_even_thread(id_tab, info);
+	ret = create_thread(id_tab, info);
 	if (ret)
 		return (0);
 	check_dead(info);
