@@ -6,11 +6,37 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:21:30 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/24 12:11:09 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:20:16 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	check_int_overflow(int argc, char **argv)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc)
+	{
+		if (ft_strlen(argv[i]) > 11)
+			return (0);
+		if (ft_atol(argv[i]) > INT_MAX || ft_atol(argv[i]) < INT_MIN)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	len;
+
+	len = 0;
+	while (str[len])
+		len++;
+	return (len);
+}
 
 size_t	get_time(void)
 {
@@ -27,11 +53,11 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-int	ft_atoi(const char *str)
+long	ft_atol(const char *str)
 {
 	size_t	i;
-	int		ret;
-	int		signe;
+	long	ret;
+	long	signe;
 
 	i = 0;
 	ret = 0;

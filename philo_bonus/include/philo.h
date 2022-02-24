@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:11:48 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/23 18:07:05 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:06:22 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@
 # define THINK "\033[0;35m is thinking\033[0m"
 # define DEAD "\033[0;31m is dead\033[0m"
 # define FORMAT " %-4ld ms philo [%ld] %s\n"
+
+# define INT_MAX 2147483647
+# define INT_MIN -2147483648
 
 typedef int				t_group;
 
@@ -72,14 +75,11 @@ typedef struct s_philo
 	pthread_t		check_other_died;
 }	t_philo;
 
-/*-----main.c-----*/
-
-int		ft_isdigit(int c);
-
 /*-----utils.c-----*/
 
+int		ft_isdigit(int c);
 int		ft_strcmp(const char *s1, const char *s2);
-int		ft_atoi(const char *str);
+long	ft_atol(const char *str);
 size_t	get_time(void);
 size_t	ft_strlen(const char *str);
 

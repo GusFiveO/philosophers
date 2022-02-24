@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:13:02 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/15 15:23:20 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:20:54 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ int	check_args(int argc, char **argv)
 	int	j;
 
 	i = 1;
+	if (!check_int_overflow(argc, argv))
+	{	
+		printf("Error in args\n");
+		return (0);
+	}
 	while (i < argc)
 	{
 		j = 0;
@@ -37,12 +42,12 @@ int	check_args(int argc, char **argv)
 
 int	parse_args(t_info *info, int argc, char **argv)
 {
-	info->nb_philo = ft_atoi(argv[1]);
-	info->time_to_die = ft_atoi(argv[2]);
-	info->time_to_eat = ft_atoi(argv[3]) * 1000;
-	info->time_to_sleep = ft_atoi(argv[4]) * 1000;
+	info->nb_philo = ft_atol(argv[1]);
+	info->time_to_die = ft_atol(argv[2]);
+	info->time_to_eat = ft_atol(argv[3]) * 1000;
+	info->time_to_sleep = ft_atol(argv[4]) * 1000;
 	if (argc == 6)
-		info->nb_t_philo_m_eat = ft_atoi(argv[5]);
+		info->nb_t_philo_m_eat = ft_atol(argv[5]);
 	else
 		info->nb_t_philo_m_eat = -1;
 	if (info->nb_t_philo_m_eat == 0 || info->nb_philo == 0)

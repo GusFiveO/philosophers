@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:21:30 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/23 18:03:45 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:05:36 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ size_t	get_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-int	ft_atoi(const char *str)
+long	ft_atol(const char *str)
 {
 	size_t	i;
-	int		ret;
-	int		signe;
+	long	ret;
+	long	signe;
 
 	i = 0;
 	ret = 0;
@@ -62,4 +62,11 @@ int	ft_strcmp(const char *s1, const char *s2)
 	while (s1[i] == s2[i] && s1[i] && s2[i])
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }

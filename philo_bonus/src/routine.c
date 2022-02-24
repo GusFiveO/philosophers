@@ -6,7 +6,7 @@
 /*   By: augustinlorain <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 15:41:18 by augustinlorai     #+#    #+#             */
-/*   Updated: 2022/02/24 11:49:29 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 13:51:23 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ void	routine(t_philo *philo)
 		usleep(philo->info->time_to_sleep);
 		print(THINK, philo);
 		sem_wait(philo->monitoring);
-		if (philo->info->time_to_die - (get_time() - philo->last_eat)
+		if (philo->info->nb_philo % 2
+			&& philo->info->time_to_die - (get_time() - philo->last_eat)
 			< (philo->info->time_to_eat + philo->info->time_to_sleep) / 2)
 			usleep((philo->info->time_to_eat + philo->info->time_to_sleep) / 2);
 		sem_post(philo->monitoring);

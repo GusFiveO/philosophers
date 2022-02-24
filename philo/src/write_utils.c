@@ -6,21 +6,11 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 11:59:42 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/15 14:50:47 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:18:01 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	len;
-
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
-}
 
 void	put_action(size_t timestamp, const char *action, size_t idx)
 {
