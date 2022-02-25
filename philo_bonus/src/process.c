@@ -6,7 +6,7 @@
 /*   By: augustinlorain <marvin@42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/20 16:14:57 by augustinlorai     #+#    #+#             */
-/*   Updated: 2022/02/24 11:20:36 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/25 12:57:33 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,21 +84,22 @@ int	launch_philo(t_info *info)
 	return (1);
 }
 
-void	lonely_philo(t_info *info)
+int	lonely_philo(t_info *info)
 {
 	info->philo[0].idx = 1;
 	info->pid_tab[0] = fork();
 	if (info->pid_tab[0] < 0)
-		return ;
+		return (0);
 	if (info->pid_tab[0] == 0)
 	{
 		info->group = philo;
 		printf(FORMAT, (size_t)0, info->philo[0].idx, FORK);
 		printf(FORMAT, info->time_to_die + 1, info->philo[0].idx, DEAD);
 		free(info->pid_tab);
+		return (1);
 	}
 	else
-		return ;
+		return (1);
 }
 
 int	launch_process(t_info *info)
@@ -108,9 +109,13 @@ int	launch_process(t_info *info)
 	i = -1;
 	init_semaphores(info);
 	if (info->nb_philo == 1)
-		lonely_philo(info);
+	{
+		if (!lonely_philo(info))
+			return (0);
+	}
 	else
-		launch_philo(info);
+		if (!launch_philo(info))
+			return (0);
 	if (info->group == master && info->nb_t_philo_m_eat != -1)
 		if (pthread_create(&info->eat_check, NULL, eat_check, info))
 			return (0);

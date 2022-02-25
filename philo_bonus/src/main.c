@@ -6,7 +6,7 @@
 /*   By: alorain <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 12:13:02 by alorain           #+#    #+#             */
-/*   Updated: 2022/02/24 14:06:54 by alorain          ###   ########.fr       */
+/*   Updated: 2022/02/25 12:55:55 by alorain          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,8 @@ int	main(int argc, char **argv)
 		{	
 			if (!fill_struct(info, argc, argv))
 				return (-1);
-			launch_process(info);
+			if (!launch_process(info))
+				free(info->pid_tab);
 			free(info->philo);
 			free(info);
 			return (1);
